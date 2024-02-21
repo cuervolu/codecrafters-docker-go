@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"os"
 	"os/exec"
@@ -19,7 +20,12 @@ func main() {
 
 	err := cmd.Run()
 	if err != nil {
-		fmt.Printf("Error: %s\n", err.Error())
-		os.Exit(1)
+		//Check the status of the error
+		var e *exec.ExitError
+		ok := errors.As(err, &e) // Check if the error is an ExitError
+		if ok {
+			os.Exit(e.ExitCode()) // Exit with the exit code of the command
+		}
+		fmt.Printf("Error: %v\n", err)
 	}
 }
