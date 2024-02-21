@@ -21,6 +21,11 @@ func main() {
 		os.Exit(1)
 	}
 
+	// Set up namespaces
+	cmd.SysProcAttr = &syscall.SysProcAttr{
+		Cloneflags: syscall.CLONE_NEWPID,
+	}
+
 	if err := cmd.Run(); err != nil {
 		handleRunError(err)
 	}
